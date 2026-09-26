@@ -2,12 +2,12 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Diario & Planificador</title>
   <style>
     :root {
       --bg-body: #000000;
-      --card-bg: rgba(28, 28, 30, 0.75);
+      --card-bg: rgba(28, 28, 30, 0.85);
       --card-border: rgba(255, 255, 255, 0.12);
       --accent: #0A84FF;
       --accent-hover: #0071E3;
@@ -27,15 +27,22 @@
       padding: 0;
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
       -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
+      background-color: var(--bg-body);
+      color: var(--text-main);
     }
 
     body {
-      background-color: var(--bg-body);
-      color: var(--text-main);
-      padding: 24px 16px;
+      padding: env(safe-area-inset-top, 16px) env(safe-area-inset-right, 12px) env(safe-area-inset-bottom, 16px) env(safe-area-inset-left, 12px);
       display: flex;
       justify-content: center;
-      min-height: 100vh;
+      min-height: 100dvh;
     }
 
     .app-container {
@@ -43,41 +50,42 @@
       max-width: 800px;
       display: flex;
       flex-direction: column;
-      gap: 24px;
+      gap: 16px;
     }
 
-    /* Header Estilo iOS/macOS */
+    /* Header Estilo iOS */
     header {
       background: var(--card-bg);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--card-border);
-      padding: 20px 24px;
-      border-radius: 20px;
+      padding: 16px;
+      border-radius: 18px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 10px;
     }
 
     header h1 {
-      font-size: 24px;
+      font-size: 20px;
       font-weight: 700;
       letter-spacing: -0.5px;
     }
 
     .stats-group {
       display: flex;
-      gap: 8px;
+      gap: 6px;
+      flex-wrap: wrap;
     }
 
     .stat-badge {
-      font-size: 13px;
+      font-size: 12px;
       color: var(--text-secondary);
       background: var(--input-bg);
-      padding: 6px 14px;
-      border-radius: 30px;
+      padding: 5px 10px;
+      border-radius: 20px;
       font-weight: 500;
     }
 
@@ -88,10 +96,11 @@
     /* Pestañas (Segmented Controls) */
     .segmented-control {
       background: var(--input-bg);
-      padding: 4px;
-      border-radius: 14px;
+      padding: 3px;
+      border-radius: 12px;
       display: flex;
       gap: 4px;
+      width: 100%;
     }
 
     .tab-btn {
@@ -99,18 +108,19 @@
       background: transparent;
       border: none;
       color: var(--text-secondary);
-      padding: 10px 16px;
-      border-radius: 10px;
-      font-size: 14px;
+      padding: 8px 10px;
+      border-radius: 9px;
+      font-size: 13px;
       font-weight: 600;
       cursor: pointer;
+      text-align: center;
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .tab-btn.active {
-      background: rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.2);
       color: var(--text-main);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
     }
 
     /* Tarjetas principales */
@@ -119,16 +129,20 @@
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--card-border);
-      border-radius: 20px;
-      padding: 20px;
+      border-radius: 18px;
+      padding: 16px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 12px;
+      width: 100%;
+      word-wrap: break-word;
+      overflow: hidden;
     }
 
     .form-row {
       display: flex;
-      gap: 10px;
+      gap: 8px;
+      width: 100%;
       flex-wrap: wrap;
     }
 
@@ -136,72 +150,84 @@
       background: var(--input-bg);
       border: 1px solid transparent;
       color: var(--text-main);
-      padding: 12px 16px;
+      padding: 12px;
       border-radius: 12px;
-      font-size: 15px;
+      font-size: 15px; /* Evita que Safari haga zoom automático */
       outline: none;
-      transition: border 0.2s;
+      width: 100%;
+      -webkit-appearance: none;
     }
 
     input:focus, select:focus, textarea:focus {
       border-color: var(--accent);
     }
 
-    input[type="text"] { flex: 1; min-width: 200px; }
-    select { min-width: 140px; cursor: pointer; }
-    textarea { width: 100%; height: 70px; resize: vertical; }
+    input[type="text"] { flex: 1; min-width: 0; }
+    select { flex: 1; min-width: 120px; cursor: pointer; }
+    textarea { width: 100%; height: 70px; resize: none; }
 
     /* Módulo de Items */
     .budget-section {
-      background: rgba(0, 0, 0, 0.2);
+      background: rgba(0, 0, 0, 0.3);
       border: 1px solid var(--card-border);
-      padding: 16px;
+      padding: 12px;
       border-radius: 14px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
+      width: 100%;
     }
 
     .budget-title {
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
       color: var(--text-secondary);
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
 
-    .item-row {
-      display: flex;
-      gap: 8px;
-      align-items: center;
+    .item-row-inputs {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr auto;
+      gap: 6px;
+      width: 100%;
     }
-
-    .item-row input[type="number"] { width: 100px; }
 
     .btn-apple-sub {
       background: var(--input-bg);
       color: var(--accent);
       border: none;
-      padding: 10px 14px;
+      padding: 10px 12px;
       border-radius: 10px;
       font-weight: 600;
       cursor: pointer;
       font-size: 13px;
+      white-space: nowrap;
     }
 
-    .btn-apple-sub.remove { color: var(--danger); }
+    .btn-apple-sub.remove { color: var(--danger); padding: 4px 8px; }
 
     .items-draft-list {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
+    }
+
+    .draft-item-single {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 6px 10px;
+      border-radius: 8px;
     }
 
     .file-custom-btn {
-      display: inline-block;
+      display: block;
       background: var(--input-bg);
       color: var(--accent);
-      padding: 12px 16px;
+      padding: 12px;
       border-radius: 12px;
       cursor: pointer;
       font-size: 14px;
@@ -219,35 +245,31 @@
       font-weight: 600;
       font-size: 16px;
       cursor: pointer;
-      transition: background 0.2s;
+      width: 100%;
     }
-
-    .btn-submit:hover { background: var(--accent-hover); }
 
     /* Notas & Galería */
-    .note-card {
-      transition: all 0.25s ease;
-    }
-
     .note-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      gap: 12px;
+      gap: 8px;
     }
 
     .note-title {
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 600;
       letter-spacing: -0.3px;
+      word-break: break-word;
     }
 
     .tag {
-      font-size: 11px;
-      padding: 4px 10px;
+      font-size: 10px;
+      padding: 3px 8px;
       border-radius: 20px;
       font-weight: 700;
       letter-spacing: 0.5px;
+      white-space: nowrap;
     }
 
     .tag-trabajo { background: rgba(255, 159, 10, 0.2); color: var(--tag-work); }
@@ -255,7 +277,7 @@
     .tag-proyecto { background: rgba(191, 90, 242, 0.2); color: var(--tag-project); }
 
     .note-date {
-      font-size: 12px;
+      font-size: 11px;
       color: var(--text-secondary);
     }
 
@@ -264,20 +286,27 @@
       color: #D1D1D6;
       line-height: 1.4;
       white-space: pre-wrap;
+      word-break: break-word;
     }
 
-    /* Tabla minimalista */
+    /* Tabla responsiva para Safari */
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border-radius: 10px;
+    }
+
     .items-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 13px;
-      background: rgba(0, 0, 0, 0.2);
-      border-radius: 10px;
-      overflow: hidden;
+      font-size: 12px;
+      background: rgba(0, 0, 0, 0.3);
+      white-space: nowrap;
     }
 
     .items-table th, .items-table td {
-      padding: 10px 12px;
+      padding: 8px 10px;
       text-align: left;
       border-bottom: 1px solid var(--card-border);
     }
@@ -288,33 +317,36 @@
     .note-gallery {
       display: flex;
       gap: 8px;
-      flex-wrap: wrap;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      -webkit-overflow-scrolling: touch;
     }
 
     .note-gallery img, .img-preview-thumb {
-      width: 80px;
-      height: 80px;
+      width: 70px;
+      height: 70px;
       object-fit: cover;
-      border-radius: 12px;
+      border-radius: 10px;
       cursor: pointer;
+      flex-shrink: 0;
       border: 1px solid var(--card-border);
     }
 
     .note-actions {
       display: flex;
       justify-content: flex-end;
-      gap: 10px;
+      gap: 8px;
       border-top: 1px solid var(--card-border);
-      padding-top: 12px;
+      padding-top: 10px;
     }
 
     .btn-action {
       background: var(--input-bg);
       border: none;
       color: var(--text-main);
-      padding: 8px 14px;
+      padding: 8px 12px;
       border-radius: 10px;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 500;
       cursor: pointer;
     }
@@ -322,28 +354,30 @@
     .btn-action.archive { color: var(--accent); }
     .btn-action.delete { color: var(--danger); }
 
-    /* Modal / Lightbox */
+    /* Modal Lightbox */
     .modal {
       display: none;
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.85);
+      background: rgba(0, 0, 0, 0.9);
       backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
       justify-content: center;
       align-items: center;
       z-index: 1000;
+      padding: 20px;
     }
 
-    .modal img { max-width: 90%; max-height: 85vh; border-radius: 16px; }
+    .modal img { max-width: 100%; max-height: 80vh; border-radius: 14px; object-fit: contain; }
 
     .empty-state {
       text-align: center;
-      padding: 40px;
+      padding: 30px 10px;
       color: var(--text-secondary);
-      font-size: 15px;
+      font-size: 14px;
     }
 
-    .tab-content { display: none; flex-direction: column; gap: 16px; }
+    .tab-content { display: none; flex-direction: column; gap: 14px; width: 100%; }
     .tab-content.active { display: flex; }
   </style>
 </head>
@@ -361,15 +395,17 @@
     <!-- Navegación por pestañas -->
     <div class="segmented-control">
       <button class="tab-btn active" onclick="switchTab('active')">Pendientes & Activas</button>
-      <button class="tab-btn" onclick="switchTab('archived')">📁 Archivo de Finalizadas</button>
+      <button class="tab-btn" onclick="switchTab('archived')">📁 Archivo</button>
     </div>
 
-    <!-- Pestaña 1: Tareas Activas y Formulario -->
+    <!-- Pestaña 1: Tareas Activas -->
     <div id="tab-active" class="tab-content active">
-      <!-- Formulario para agregar -->
       <div class="card-form">
         <div class="form-row">
-          <input type="text" id="entryTitle" placeholder="Título (Presiona Enter para guardar rápido)..." autocomplete="off" onkeydown="handleKeyPress(event)">
+          <input type="text" id="entryTitle" placeholder="Título (Enter para guardar)..." autocomplete="off" onkeydown="handleKeyPress(event)">
+        </div>
+        
+        <div class="form-row">
           <select id="entryCategory">
             <option value="Trabajo">💼 Trabajo</option>
             <option value="Casa">🏠 Casa</option>
@@ -377,13 +413,13 @@
           </select>
         </div>
 
-        <textarea id="entryDetails" placeholder="Detalles, notas técnicas, mediciones o explicaciones..."></textarea>
+        <textarea id="entryDetails" placeholder="Detalles, mediciones o explicaciones..."></textarea>
 
-        <!-- Submódulo Presupuesto / Materiales -->
+        <!-- Submódulo Presupuesto -->
         <div class="budget-section">
-          <div class="budget-title">Desglose de Materiales / Precios (Enter para agregar artículo)</div>
-          <div class="item-row">
-            <input type="text" id="itemName" placeholder="Artículo (ej: Pintura, Bisagra)" onkeydown="handleItemKeyPress(event)">
+          <div class="budget-title">Materiales / Precios</div>
+          <div class="item-row-inputs">
+            <input type="text" id="itemName" placeholder="Artículo" onkeydown="handleItemKeyPress(event)">
             <input type="number" id="itemQty" placeholder="Cant." min="1" value="1" onkeydown="handleItemKeyPress(event)">
             <input type="number" id="itemPrice" placeholder="Precio ($)" step="0.01" onkeydown="handleItemKeyPress(event)">
             <button class="btn-apple-sub" onclick="addItemToDraft()">+ Añadir</button>
@@ -401,10 +437,7 @@
         <button class="btn-submit" onclick="addEntry()">Guardar Entrada</button>
       </div>
 
-      <!-- Buscador -->
       <input type="text" id="searchInput" placeholder="🔍 Buscar..." oninput="renderEntries()">
-
-      <!-- Lista de Notas Activas -->
       <div class="notes-grid" id="activeNotesGrid"></div>
     </div>
 
@@ -431,7 +464,6 @@
       renderEntries();
     }
 
-    /* Control de Pestañas */
     function switchTab(tab) {
       currentTab = tab;
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -447,7 +479,6 @@
       renderEntries();
     }
 
-    /* Eventos Enter */
     function handleKeyPress(event) {
       if (event.key === 'Enter') {
         event.preventDefault();
@@ -462,7 +493,6 @@
       }
     }
 
-    /* Artículos de presupuesto */
     function addItemToDraft() {
       const nameInput = document.getElementById('itemName');
       const qtyInput = document.getElementById('itemQty');
@@ -479,7 +509,6 @@
       nameInput.value = '';
       qtyInput.value = '1';
       priceInput.value = '';
-      nameInput.focus();
 
       renderDraftItems();
     }
@@ -492,23 +521,21 @@
     function renderDraftItems() {
       const container = document.getElementById('draftItemsList');
       container.innerHTML = '';
-      let total = 0;
 
       draftItems.forEach((item, index) => {
-        total += item.subtotal;
         const div = document.createElement('div');
-        div.className = 'item-row';
-        div.style.fontSize = '13px';
+        div.className = 'draft-item-single';
         div.innerHTML = `
-          <span style="flex: 1;">${item.name} (${item.qty}x $${item.price.toFixed(2)})</span>
-          <span style="font-weight: 600; color: var(--success);">$${item.subtotal.toFixed(2)}</span>
-          <button class="btn-apple-sub remove" onclick="removeDraftItem(${index})">✕</button>
+          <span>${item.name} (${item.qty}x $${item.price.toFixed(2)})</span>
+          <div>
+            <span style="font-weight: 600; color: var(--success); margin-right: 8px;">$${item.subtotal.toFixed(2)}</span>
+            <button class="btn-apple-sub remove" onclick="removeDraftItem(${index})">✕</button>
+          </div>
         `;
         container.appendChild(div);
       });
     }
 
-    /* Imágenes */
     function previewImages(event) {
       const files = event.target.files;
       const previewArea = document.getElementById('previewArea');
@@ -528,7 +555,6 @@
       });
     }
 
-    /* Agregar Nota */
     function addEntry() {
       const titleInput = document.getElementById('entryTitle');
       const title = titleInput.value.trim();
@@ -554,7 +580,6 @@
       entries.unshift(newEntry);
       saveToStorage();
 
-      // Limpieza
       titleInput.value = '';
       document.getElementById('entryDetails').value = '';
       document.getElementById('entryPhotos').value = '';
@@ -570,7 +595,7 @@
     }
 
     function deleteEntry(id) {
-      if (confirm('¿Eliminar este registro permanentemente?')) {
+      if (confirm('¿Eliminar registro?')) {
         entries = entries.filter(entry => entry.id !== id);
         saveToStorage();
       }
@@ -585,7 +610,6 @@
       document.getElementById('imageModal').style.display = 'none';
     }
 
-    /* Renderizado general */
     function renderEntries() {
       const activeGrid = document.getElementById('activeNotesGrid');
       const archivedGrid = document.getElementById('archivedNotesGrid');
@@ -597,8 +621,7 @@
       const activeEntries = entries.filter(e => !e.archived && (e.title.toLowerCase().includes(searchQuery) || e.details.toLowerCase().includes(searchQuery)));
       const archivedEntries = entries.filter(e => e.archived && (e.title.toLowerCase().includes(searchQuery) || e.details.toLowerCase().includes(searchQuery)));
 
-      // Métricas superiores
-      document.getElementById('statsCounter').textContent = `${entries.length} Registros`;
+      document.getElementById('statsCounter').textContent = `${entries.length} Reg.`;
       const globalCost = entries.reduce((acc, curr) => acc + (curr.totalCost || 0), 0);
       document.getElementById('statsTotalMoney').textContent = `$${globalCost.toFixed(2)}`;
 
@@ -621,14 +644,15 @@
         let itemsHTML = '';
         if (item.items && item.items.length > 0) {
           itemsHTML = `
-            <table class="items-table">
-              <thead><tr><th>Artículo</th><th>Cant.</th><th>Precio</th><th>Subtotal</th></tr></thead>
-              <tbody>
+            <div class="table-container">
+              <table class="items-table">
+                <thead><tr><th>Artículo</th><th>Cant.</th><th>Precio</th><th>Subtotal</th></tr></thead>
+                <tbody>
           `;
           item.items.forEach(it => {
             itemsHTML += `<tr><td>${it.name}</td><td>${it.qty}</td><td>$${it.price.toFixed(2)}</td><td>$${it.subtotal.toFixed(2)}</td></tr>`;
           });
-          itemsHTML += `<tr class="total-row"><td colspan="3">Total</td><td>$${item.totalCost.toFixed(2)}</td></tr></tbody></table>`;
+          itemsHTML += `<tr class="total-row"><td colspan="3">Total</td><td>$${item.totalCost.toFixed(2)}</td></tr></tbody></table></div>`;
         }
 
         let photosHTML = '';
