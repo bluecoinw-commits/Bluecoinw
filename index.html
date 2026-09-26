@@ -3,33 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mi Diario de Trabajo & Planificador</title>
+  <title>Diario & Planificador</title>
   <style>
     :root {
-      --bg-primary: #121212;
-      --bg-card: #1e1e1e;
-      --bg-input: #2a2a2a;
-      --accent: #00adb5;
-      --accent-hover: #00888e;
-      --text-main: #e0e0e0;
-      --text-muted: #aaaaaa;
-      --border-color: #333333;
-      --tag-work: #ff9800;
-      --tag-home: #4caf50;
-      --tag-project: #9c27b0;
+      --bg-body: #000000;
+      --card-bg: rgba(28, 28, 30, 0.75);
+      --card-border: rgba(255, 255, 255, 0.12);
+      --accent: #0A84FF;
+      --accent-hover: #0071E3;
+      --text-main: #F5F5F7;
+      --text-secondary: #8E8E93;
+      --input-bg: rgba(118, 118, 128, 0.24);
+      --success: #30D158;
+      --danger: #FF453A;
+      --tag-work: #FF9F0A;
+      --tag-home: #30D158;
+      --tag-project: #BF5AF2;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
     }
 
     body {
-      background-color: var(--bg-primary);
+      background-color: var(--bg-body);
       color: var(--text-main);
-      padding: 20px;
+      padding: 24px 16px;
       display: flex;
       justify-content: center;
       min-height: 100vh;
@@ -37,65 +40,90 @@
 
     .app-container {
       width: 100%;
-      max-width: 900px;
+      max-width: 800px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 24px;
     }
 
+    /* Header Estilo iOS/macOS */
     header {
-      background: var(--bg-card);
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      padding: 20px 24px;
+      border-radius: 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    header h1 {
-      color: var(--accent);
-      font-size: 22px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    header .stats-group {
-      display: flex;
-      gap: 10px;
-    }
-
-    header .stats {
-      font-size: 13px;
-      color: var(--text-muted);
-      background: var(--bg-input);
-      padding: 6px 12px;
-      border-radius: 20px;
-    }
-
-    header .stats-money {
-      color: #4caf50;
-      font-weight: bold;
-    }
-
-    /* Formulario principal */
-    .card-form {
-      background: var(--bg-card);
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-      display: flex;
-      flex-direction: column;
       gap: 12px;
     }
 
-    .card-form h2 {
-      font-size: 16px;
-      color: var(--accent);
-      margin-bottom: 5px;
+    header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .stats-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    .stat-badge {
+      font-size: 13px;
+      color: var(--text-secondary);
+      background: var(--input-bg);
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-weight: 500;
+    }
+
+    .stat-badge.money {
+      color: var(--success);
+    }
+
+    /* Pestañas (Segmented Controls) */
+    .segmented-control {
+      background: var(--input-bg);
+      padding: 4px;
+      border-radius: 14px;
+      display: flex;
+      gap: 4px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .tab-btn.active {
+      background: rgba(255, 255, 255, 0.18);
+      color: var(--text-main);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    /* Tarjetas principales */
+    .card-form, .note-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
 
     .form-row {
@@ -105,48 +133,41 @@
     }
 
     input, select, textarea {
-      background: var(--bg-input);
-      border: 1px solid var(--border-color);
-      color: #fff;
-      padding: 12px;
-      border-radius: 8px;
-      font-size: 14px;
+      background: var(--input-bg);
+      border: 1px solid transparent;
+      color: var(--text-main);
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 15px;
       outline: none;
+      transition: border 0.2s;
     }
 
     input:focus, select:focus, textarea:focus {
       border-color: var(--accent);
     }
 
-    input[type="text"] {
-      flex: 1;
-      min-width: 200px;
-    }
+    input[type="text"] { flex: 1; min-width: 200px; }
+    select { min-width: 140px; cursor: pointer; }
+    textarea { width: 100%; height: 70px; resize: vertical; }
 
-    select {
-      min-width: 140px;
-    }
-
-    textarea {
-      width: 100%;
-      height: 80px;
-      resize: vertical;
-    }
-
-    /* Subsección de Materiales / Compras */
+    /* Módulo de Items */
     .budget-section {
-      background: #161616;
-      border: 1px solid var(--border-color);
-      padding: 15px;
-      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--card-border);
+      padding: 16px;
+      border-radius: 14px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
     }
 
-    .budget-section h3 {
-      font-size: 14px;
-      color: var(--text-muted);
+    .budget-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .item-row {
@@ -155,361 +176,293 @@
       align-items: center;
     }
 
-    .item-row input[type="number"] {
-      width: 90px;
-    }
+    .item-row input[type="number"] { width: 100px; }
 
-    .btn-small {
-      background: var(--accent);
-      color: #fff;
+    .btn-apple-sub {
+      background: var(--input-bg);
+      color: var(--accent);
       border: none;
-      padding: 8px 12px;
-      border-radius: 6px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-weight: 600;
       cursor: pointer;
-      font-weight: bold;
       font-size: 13px;
     }
 
-    .btn-small.remove {
-      background: #f44336;
-    }
+    .btn-apple-sub.remove { color: var(--danger); }
 
-    .items-list {
+    .items-draft-list {
       display: flex;
       flex-direction: column;
-      gap: 6px;
-    }
-
-    .file-input-wrapper {
-      position: relative;
-      display: inline-block;
-      flex: 1;
-      min-width: 200px;
-    }
-
-    .file-input-wrapper input[type="file"] {
-      display: none;
+      gap: 8px;
     }
 
     .file-custom-btn {
-      display: block;
-      background: var(--bg-input);
-      border: 1px dashed var(--accent);
+      display: inline-block;
+      background: var(--input-bg);
       color: var(--accent);
-      padding: 10px;
-      text-align: center;
-      border-radius: 8px;
+      padding: 12px 16px;
+      border-radius: 12px;
       cursor: pointer;
-      font-size: 13px;
-      font-weight: bold;
-    }
-
-    .file-custom-btn:hover {
-      background: #252525;
-    }
-
-    .preview-container {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 5px;
-    }
-
-    .img-preview-thumb {
-      width: 60px;
-      height: 60px;
-      object-fit: cover;
-      border-radius: 6px;
-      border: 1px solid var(--accent);
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      width: 100%;
     }
 
     .btn-submit {
       background: var(--accent);
       color: #fff;
       border: none;
-      padding: 12px;
-      border-radius: 8px;
-      font-weight: bold;
-      font-size: 15px;
+      padding: 14px;
+      border-radius: 14px;
+      font-weight: 600;
+      font-size: 16px;
       cursor: pointer;
       transition: background 0.2s;
     }
 
-    .btn-submit:hover {
-      background: var(--accent-hover);
-    }
+    .btn-submit:hover { background: var(--accent-hover); }
 
-    /* Barra de búsqueda y filtros */
-    .controls-bar {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .search-box {
-      flex: 1;
-    }
-
-    /* Contenedor de notas */
-    .notes-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-
+    /* Notas & Galería */
     .note-card {
-      background: var(--bg-card);
-      border-radius: 12px;
-      padding: 18px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-      border-left: 5px solid var(--accent);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      transition: transform 0.2s;
-    }
-
-    .note-card.completed {
-      border-left-color: #4caf50;
-      opacity: 0.8;
-    }
-
-    .note-card.completed .note-title {
-      text-decoration: line-through;
-      color: var(--text-muted);
+      transition: all 0.25s ease;
     }
 
     .note-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      gap: 10px;
+      gap: 12px;
     }
 
     .note-title {
-      font-size: 17px;
-      font-weight: bold;
-      color: #fff;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
     }
 
     .tag {
       font-size: 11px;
-      padding: 4px 8px;
-      border-radius: 12px;
-      text-transform: uppercase;
-      font-weight: bold;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
     }
 
-    .tag-trabajo { background: rgba(255, 152, 0, 0.2); color: var(--tag-work); }
-    .tag-casa { background: rgba(76, 175, 80, 0.2); color: var(--tag-home); }
-    .tag-proyecto { background: rgba(156, 39, 176, 0.2); color: var(--tag-project); }
+    .tag-trabajo { background: rgba(255, 159, 10, 0.2); color: var(--tag-work); }
+    .tag-casa { background: rgba(48, 209, 88, 0.2); color: var(--tag-home); }
+    .tag-proyecto { background: rgba(191, 90, 242, 0.2); color: var(--tag-project); }
 
-    .note-meta {
+    .note-date {
       font-size: 12px;
-      color: var(--text-muted);
-      display: flex;
-      gap: 15px;
+      color: var(--text-secondary);
     }
 
     .note-details {
       font-size: 14px;
-      line-height: 1.5;
-      color: #ccc;
+      color: #D1D1D6;
+      line-height: 1.4;
       white-space: pre-wrap;
     }
 
-    /* Tabla de materiales dentro de la nota */
+    /* Tabla minimalista */
     .items-table {
       width: 100%;
       border-collapse: collapse;
       font-size: 13px;
-      margin-top: 5px;
-      background: #181818;
-      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
       overflow: hidden;
     }
 
     .items-table th, .items-table td {
-      padding: 8px 10px;
+      padding: 10px 12px;
       text-align: left;
-      border-bottom: 1px solid #2a2a2a;
+      border-bottom: 1px solid var(--card-border);
     }
 
-    .items-table th {
-      color: var(--accent);
-      background: #222;
-    }
+    .items-table th { color: var(--text-secondary); font-weight: 500; }
+    .items-table .total-row { font-weight: 700; color: var(--success); }
 
-    .items-table .total-row {
-      font-weight: bold;
-      color: #4caf50;
-      background: #202020;
-    }
-
-    /* Galería de fotos */
     .note-gallery {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       flex-wrap: wrap;
-      margin-top: 5px;
     }
 
-    .note-gallery img {
-      width: 100px;
-      height: 100px;
+    .note-gallery img, .img-preview-thumb {
+      width: 80px;
+      height: 80px;
       object-fit: cover;
-      border-radius: 8px;
+      border-radius: 12px;
       cursor: pointer;
-      border: 1px solid var(--border-color);
-      transition: transform 0.2s;
-    }
-
-    .note-gallery img:hover {
-      transform: scale(1.05);
+      border: 1px solid var(--card-border);
     }
 
     .note-actions {
       display: flex;
       justify-content: flex-end;
-      gap: 8px;
-      margin-top: 5px;
-      border-top: 1px solid var(--border-color);
-      padding-top: 10px;
+      gap: 10px;
+      border-top: 1px solid var(--card-border);
+      padding-top: 12px;
     }
 
     .btn-action {
-      background: var(--bg-input);
-      border: 1px solid var(--border-color);
+      background: var(--input-bg);
+      border: none;
       color: var(--text-main);
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 12px;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 5px;
     }
 
-    .btn-action:hover {
-      border-color: var(--accent);
-    }
+    .btn-action.archive { color: var(--accent); }
+    .btn-action.delete { color: var(--danger); }
 
-    .btn-action.delete:hover {
-      border-color: #f44336;
-      color: #f44336;
-    }
-
-    .btn-action.check:hover {
-      border-color: #4caf50;
-      color: #4caf50;
-    }
-
-    /* Modal */
+    /* Modal / Lightbox */
     .modal {
       display: none;
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.9);
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(15px);
       justify-content: center;
       align-items: center;
       z-index: 1000;
     }
 
-    .modal img {
-      max-width: 90%;
-      max-height: 85vh;
-      border-radius: 8px;
-    }
+    .modal img { max-width: 90%; max-height: 85vh; border-radius: 16px; }
 
     .empty-state {
       text-align: center;
       padding: 40px;
-      color: var(--text-muted);
+      color: var(--text-secondary);
       font-size: 15px;
     }
+
+    .tab-content { display: none; flex-direction: column; gap: 16px; }
+    .tab-content.active { display: flex; }
   </style>
 </head>
 <body>
 
   <div class="app-container">
     <header>
-      <h1>📓 Bitácora & Diario Personal</h1>
+      <h1>Diario & Bitácora</h1>
       <div class="stats-group">
-        <div class="stats" id="statsCounter">0 Registros</div>
-        <div class="stats stats-money" id="statsTotalMoney">Total: $0.00</div>
+        <div class="stat-badge" id="statsCounter">0 Registros</div>
+        <div class="stat-badge money" id="statsTotalMoney">$0.00</div>
       </div>
     </header>
 
-    <!-- Formulario para agregar entrada con matemática -->
-    <div class="card-form">
-      <h2>Nueva Entrada / Tarea</h2>
-      
-      <div class="form-row">
-        <input type="text" id="entryTitle" placeholder="Título (ej: Reparación de puertas, Compras para la casa...)" autocomplete="off">
-        <select id="entryCategory">
-          <option value="Trabajo">💼 Trabajo</option>
-          <option value="Casa">🏠 Casa</option>
-          <option value="Proyecto">⚡ Proyecto / Idea</option>
-        </select>
-      </div>
-
-      <textarea id="entryDetails" placeholder="Detalles, notas técnicas, mediciones o explicaciones..."></textarea>
-
-      <!-- Subformulario de presupuesto / matemática -->
-      <div class="budget-section">
-        <h3>🛒 Lista de Compras / Materiales (Matemática)</h3>
-        
-        <div class="item-row">
-          <input type="text" id="itemName" placeholder="Artículo (ej: Bisagras, Pintura, Combustible)">
-          <input type="number" id="itemQty" placeholder="Cant." min="1" value="1">
-          <input type="number" id="itemPrice" placeholder="Precio ($)" step="0.01">
-          <button class="btn-small" onclick="addItemToDraft()">+ Agregar</button>
-        </div>
-
-        <div class="items-list" id="draftItemsList"></div>
-      </div>
-
-      <div class="form-row" style="align-items: center;">
-        <div class="file-input-wrapper">
-          <label for="entryPhotos" class="file-custom-btn">📷 Adjuntar Fotos (Evidencia)</label>
-          <input type="file" id="entryPhotos" accept="image/*" multiple onchange="previewImages(event)">
-        </div>
-        <button class="btn-submit" onclick="addEntry()">+ Guardar en mi Bitácora</button>
-      </div>
-
-      <div class="preview-container" id="previewArea"></div>
+    <!-- Navegación por pestañas -->
+    <div class="segmented-control">
+      <button class="tab-btn active" onclick="switchTab('active')">Pendientes & Activas</button>
+      <button class="tab-btn" onclick="switchTab('archived')">📁 Archivo de Finalizadas</button>
     </div>
 
-    <!-- Filtro y Búsqueda -->
-    <div class="controls-bar">
-      <input type="text" class="search-box" id="searchInput" placeholder="🔍 Buscar por palabra clave..." oninput="filterEntries()">
-      <select id="filterCategory" onchange="filterEntries()">
-        <option value="Todos">Todas las categorías</option>
-        <option value="Trabajo">💼 Trabajo</option>
-        <option value="Casa">🏠 Casa</option>
-        <option value="Proyecto">⚡ Proyecto</option>
-      </select>
+    <!-- Pestaña 1: Tareas Activas y Formulario -->
+    <div id="tab-active" class="tab-content active">
+      <!-- Formulario para agregar -->
+      <div class="card-form">
+        <div class="form-row">
+          <input type="text" id="entryTitle" placeholder="Título (Presiona Enter para guardar rápido)..." autocomplete="off" onkeydown="handleKeyPress(event)">
+          <select id="entryCategory">
+            <option value="Trabajo">💼 Trabajo</option>
+            <option value="Casa">🏠 Casa</option>
+            <option value="Proyecto">⚡ Proyecto</option>
+          </select>
+        </div>
+
+        <textarea id="entryDetails" placeholder="Detalles, notas técnicas, mediciones o explicaciones..."></textarea>
+
+        <!-- Submódulo Presupuesto / Materiales -->
+        <div class="budget-section">
+          <div class="budget-title">Desglose de Materiales / Precios (Enter para agregar artículo)</div>
+          <div class="item-row">
+            <input type="text" id="itemName" placeholder="Artículo (ej: Pintura, Bisagra)" onkeydown="handleItemKeyPress(event)">
+            <input type="number" id="itemQty" placeholder="Cant." min="1" value="1" onkeydown="handleItemKeyPress(event)">
+            <input type="number" id="itemPrice" placeholder="Precio ($)" step="0.01" onkeydown="handleItemKeyPress(event)">
+            <button class="btn-apple-sub" onclick="addItemToDraft()">+ Añadir</button>
+          </div>
+          <div class="items-draft-list" id="draftItemsList"></div>
+        </div>
+
+        <div class="form-row">
+          <label for="entryPhotos" class="file-custom-btn">📷 Adjuntar Fotos</label>
+          <input type="file" id="entryPhotos" accept="image/*" multiple style="display:none;" onchange="previewImages(event)">
+        </div>
+
+        <div class="preview-container note-gallery" id="previewArea"></div>
+
+        <button class="btn-submit" onclick="addEntry()">Guardar Entrada</button>
+      </div>
+
+      <!-- Buscador -->
+      <input type="text" id="searchInput" placeholder="🔍 Buscar..." oninput="renderEntries()">
+
+      <!-- Lista de Notas Activas -->
+      <div class="notes-grid" id="activeNotesGrid"></div>
     </div>
 
-    <!-- Lista de Notas -->
-    <div class="notes-grid" id="notesGrid"></div>
+    <!-- Pestaña 2: Archivo -->
+    <div id="tab-archived" class="tab-content">
+      <input type="text" id="searchArchivedInput" placeholder="🔍 Buscar en el archivo..." oninput="renderEntries()">
+      <div class="notes-grid" id="archivedNotesGrid"></div>
+    </div>
   </div>
 
-  <!-- Modal para ver foto ampliada -->
+  <!-- Modal Lightbox -->
   <div class="modal" id="imageModal" onclick="closeModal()">
-    <img id="modalImg" src="" alt="Foto ampliada">
+    <img id="modalImg" src="" alt="Vista Previa">
   </div>
 
   <script>
-    let entries = JSON.parse(localStorage.getItem('my_journal_entries')) || [];
+    let entries = JSON.parse(localStorage.getItem('my_journal_entries_apple')) || [];
     let currentBase64Images = [];
-    let draftItems = []; // Almacena temporalmente los artículos del formulario actual
+    let draftItems = [];
+    let currentTab = 'active';
 
     function saveToStorage() {
-      localStorage.setItem('my_journal_entries', JSON.stringify(entries));
+      localStorage.setItem('my_journal_entries_apple', JSON.stringify(entries));
       renderEntries();
     }
 
+    /* Control de Pestañas */
+    function switchTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+      if (tab === 'active') {
+        document.querySelectorAll('.tab-btn')[0].classList.add('active');
+        document.getElementById('tab-active').classList.add('active');
+      } else {
+        document.querySelectorAll('.tab-btn')[1].classList.add('active');
+        document.getElementById('tab-archived').classList.add('active');
+      }
+      renderEntries();
+    }
+
+    /* Eventos Enter */
+    function handleKeyPress(event) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        addEntry();
+      }
+    }
+
+    function handleItemKeyPress(event) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        addItemToDraft();
+      }
+    }
+
+    /* Artículos de presupuesto */
     function addItemToDraft() {
       const nameInput = document.getElementById('itemName');
       const qtyInput = document.getElementById('itemQty');
@@ -519,17 +472,9 @@
       const qty = parseInt(qtyInput.value) || 1;
       const price = parseFloat(priceInput.value) || 0;
 
-      if (name === '') {
-        alert('Escribe el nombre del artículo');
-        return;
-      }
+      if (!name) return;
 
-      draftItems.push({
-        name: name,
-        qty: qty,
-        price: price,
-        subtotal: qty * price
-      });
+      draftItems.push({ name, qty, price, subtotal: qty * price });
 
       nameInput.value = '';
       qtyInput.value = '1';
@@ -547,7 +492,6 @@
     function renderDraftItems() {
       const container = document.getElementById('draftItemsList');
       container.innerHTML = '';
-
       let total = 0;
 
       draftItems.forEach((item, index) => {
@@ -557,23 +501,14 @@
         div.style.fontSize = '13px';
         div.innerHTML = `
           <span style="flex: 1;">${item.name} (${item.qty}x $${item.price.toFixed(2)})</span>
-          <span style="font-weight: bold; color: #4caf50;">$${item.subtotal.toFixed(2)}</span>
-          <button class="btn-small remove" onclick="removeDraftItem(${index})">✕</button>
+          <span style="font-weight: 600; color: var(--success);">$${item.subtotal.toFixed(2)}</span>
+          <button class="btn-apple-sub remove" onclick="removeDraftItem(${index})">✕</button>
         `;
         container.appendChild(div);
       });
-
-      if (draftItems.length > 0) {
-        const totalDiv = document.createElement('div');
-        totalDiv.style.fontWeight = 'bold';
-        totalDiv.style.color = '#00adb5';
-        totalDiv.style.fontSize = '14px';
-        totalDiv.style.marginTop = '5px';
-        totalDiv.textContent = `Total estimado: $${total.toFixed(2)}`;
-        container.appendChild(totalDiv);
-      }
     }
 
+    /* Imágenes */
     function previewImages(event) {
       const files = event.target.files;
       const previewArea = document.getElementById('previewArea');
@@ -593,35 +528,34 @@
       });
     }
 
+    /* Agregar Nota */
     function addEntry() {
-      const title = document.getElementById('entryTitle').value.trim();
+      const titleInput = document.getElementById('entryTitle');
+      const title = titleInput.value.trim();
       const category = document.getElementById('entryCategory').value;
       const details = document.getElementById('entryDetails').value.trim();
 
-      if (title === '') {
-        alert('Por favor ponle un título a la entrada.');
-        return;
-      }
+      if (!title) return;
 
       const totalItemsCost = draftItems.reduce((acc, curr) => acc + curr.subtotal, 0);
 
       const newEntry = {
         id: Date.now(),
-        title: title,
-        category: category,
-        details: details,
+        title,
+        category,
+        details,
         items: [...draftItems],
         totalCost: totalItemsCost,
         photos: [...currentBase64Images],
-        date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        completed: false
+        date: new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) + ', ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        archived: false
       };
 
       entries.unshift(newEntry);
       saveToStorage();
 
-      // Limpiar todo el formulario
-      document.getElementById('entryTitle').value = '';
+      // Limpieza
+      titleInput.value = '';
       document.getElementById('entryDetails').value = '';
       document.getElementById('entryPhotos').value = '';
       document.getElementById('previewArea').innerHTML = '';
@@ -630,149 +564,101 @@
       currentBase64Images = [];
     }
 
-    function toggleComplete(id) {
-      entries = entries.map(entry => {
-        if (entry.id === id) {
-          return { ...entry, completed: !entry.completed };
-        }
-        return entry;
-      });
+    function toggleArchive(id) {
+      entries = entries.map(entry => entry.id === id ? { ...entry, archived: !entry.archived } : entry);
       saveToStorage();
     }
 
     function deleteEntry(id) {
-      if (confirm('¿Estás seguro de que quieres borrar este registro?')) {
+      if (confirm('¿Eliminar este registro permanentemente?')) {
         entries = entries.filter(entry => entry.id !== id);
         saveToStorage();
       }
     }
 
     function openModal(imgSrc) {
-      const modal = document.getElementById('imageModal');
-      const modalImg = document.getElementById('modalImg');
-      modalImg.src = imgSrc;
-      modal.style.display = 'flex';
+      document.getElementById('modalImg').src = imgSrc;
+      document.getElementById('imageModal').style.display = 'flex';
     }
 
     function closeModal() {
       document.getElementById('imageModal').style.display = 'none';
     }
 
-    function filterEntries() {
-      const query = document.getElementById('searchInput').value.toLowerCase();
-      const categoryFilter = document.getElementById('filterCategory').value;
-
-      const filtered = entries.filter(entry => {
-        const matchesQuery = entry.title.toLowerCase().includes(query) || entry.details.toLowerCase().includes(query);
-        const matchesCat = categoryFilter === 'Todos' || entry.category === categoryFilter;
-        return matchesQuery && matchesCat;
-      });
-
-      renderGrid(filtered);
-    }
-
+    /* Renderizado general */
     function renderEntries() {
-      filterEntries();
-    }
+      const activeGrid = document.getElementById('activeNotesGrid');
+      const archivedGrid = document.getElementById('archivedNotesGrid');
+      const searchQuery = (currentTab === 'active' ? document.getElementById('searchInput').value : document.getElementById('searchArchivedInput').value).toLowerCase();
 
-    function renderGrid(dataList) {
-      const grid = document.getElementById('notesGrid');
-      const statsCounter = document.getElementById('statsCounter');
-      const statsTotalMoney = document.getElementById('statsTotalMoney');
-      grid.innerHTML = '';
+      activeGrid.innerHTML = '';
+      archivedGrid.innerHTML = '';
 
-      statsCounter.textContent = `${entries.length} Registro(s)`;
+      const activeEntries = entries.filter(e => !e.archived && (e.title.toLowerCase().includes(searchQuery) || e.details.toLowerCase().includes(searchQuery)));
+      const archivedEntries = entries.filter(e => e.archived && (e.title.toLowerCase().includes(searchQuery) || e.details.toLowerCase().includes(searchQuery)));
 
-      const globalMoney = entries.reduce((acc, curr) => acc + (curr.totalCost || 0), 0);
-      statsTotalMoney.textContent = `Total: $${globalMoney.toFixed(2)}`;
+      // Métricas superiores
+      document.getElementById('statsCounter').textContent = `${entries.length} Registros`;
+      const globalCost = entries.reduce((acc, curr) => acc + (curr.totalCost || 0), 0);
+      document.getElementById('statsTotalMoney').textContent = `$${globalCost.toFixed(2)}`;
 
-      if (dataList.length === 0) {
-        grid.innerHTML = `<div class="empty-state">No hay registros guardados todavía. ¡Empieza creando uno arriba!</div>`;
+      const targetList = currentTab === 'active' ? activeEntries : archivedEntries;
+      const targetGrid = currentTab === 'active' ? activeGrid : archivedGrid;
+
+      if (targetList.length === 0) {
+        targetGrid.innerHTML = `<div class="empty-state">${currentTab === 'active' ? 'No hay tareas activas.' : 'El archivo está vacío.'}</div>`;
         return;
       }
 
-      dataList.forEach(item => {
+      targetList.forEach(item => {
         const card = document.createElement('div');
-        card.className = `note-card ${item.completed ? 'completed' : ''}`;
+        card.className = 'note-card';
 
         let tagClass = 'tag-trabajo';
         if (item.category === 'Casa') tagClass = 'tag-casa';
         if (item.category === 'Proyecto') tagClass = 'tag-proyecto';
 
-        // Construir tabla de compras si existen
         let itemsHTML = '';
         if (item.items && item.items.length > 0) {
           itemsHTML = `
             <table class="items-table">
-              <thead>
-                <tr>
-                  <th>Artículo</th>
-                  <th>Cant.</th>
-                  <th>Precio</th>
-                  <th>Subtotal</th>
-                </tr>
-              </thead>
+              <thead><tr><th>Artículo</th><th>Cant.</th><th>Precio</th><th>Subtotal</th></tr></thead>
               <tbody>
           `;
-
           item.items.forEach(it => {
-            itemsHTML += `
-              <tr>
-                <td>${it.name}</td>
-                <td>${it.qty}</td>
-                <td>$${it.price.toFixed(2)}</td>
-                <td>$${it.subtotal.toFixed(2)}</td>
-              </tr>
-            `;
+            itemsHTML += `<tr><td>${it.name}</td><td>${it.qty}</td><td>$${it.price.toFixed(2)}</td><td>$${it.subtotal.toFixed(2)}</td></tr>`;
           });
-
-          itemsHTML += `
-                <tr class="total-row">
-                  <td colspan="3">TOTAL ESTIMADO</td>
-                  <td>$${(item.totalCost || 0).toFixed(2)}</td>
-                </tr>
-              </tbody>
-            </table>
-          `;
+          itemsHTML += `<tr class="total-row"><td colspan="3">Total</td><td>$${item.totalCost.toFixed(2)}</td></tr></tbody></table>`;
         }
 
-        // Construir imágenes
         let photosHTML = '';
         if (item.photos && item.photos.length > 0) {
           photosHTML = `<div class="note-gallery">`;
           item.photos.forEach(imgData => {
-            photosHTML += `<img src="${imgData}" onclick="openModal('${imgData}')" alt="Foto adjunta">`;
+            photosHTML += `<img src="${imgData}" onclick="openModal('${imgData}')" alt="Foto">`;
           });
           photosHTML += `</div>`;
         }
 
         card.innerHTML = `
           <div class="note-header">
-            <div class="note-title">${item.title}</div>
+            <div>
+              <div class="note-title">${item.title}</div>
+              <div class="note-date">${item.date}</div>
+            </div>
             <span class="tag ${tagClass}">${item.category}</span>
           </div>
-
-          <div class="note-meta">
-            <span>📅 ${item.date}</span>
-          </div>
-
           ${item.details ? `<div class="note-details">${item.details}</div>` : ''}
-
           ${itemsHTML}
-
           ${photosHTML}
-
           <div class="note-actions">
-            <button class="btn-action check" onclick="toggleComplete(${item.id})">
-              ${item.completed ? '↩️ Reabrir' : '✓ Marcar Hecho'}
+            <button class="btn-action archive" onclick="toggleArchive(${item.id})">
+              ${item.archived ? '↩️ Desarchivar' : '📁 Archivar'}
             </button>
-            <button class="btn-action delete" onclick="deleteEntry(${item.id})">
-              ✕ Eliminar
-            </button>
+            <button class="btn-action delete" onclick="deleteEntry(${item.id})">Eliminar</button>
           </div>
         `;
-
-        grid.appendChild(card);
+        targetGrid.appendChild(card);
       });
     }
 
